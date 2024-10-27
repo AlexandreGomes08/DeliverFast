@@ -1,16 +1,18 @@
-import 'react-native-gesture-handler';
+import './gesture-handler';
 import { StatusBar } from 'react-native';
-import Preload from './src/pages/login';
+
+import Routes from './src/routes/index.routes';
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App(){
   return(
-    <>
+    <NavigationContainer>
       <StatusBar 
         barStyle='light-content'
         backgroundColor='transparent'
         translucent
       />
-      <Preload />
-    </>
+      <Routes />
+    </NavigationContainer>
   );
 }
