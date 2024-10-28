@@ -1,20 +1,24 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Pedidos from '../pages/pedidos';
 import Settings from '../pages/settings';
-import Entregas from '../pages/entregas';
+import Deliveries from '../pages/deliveries';
+import CustomTabBar from '../components/CustomTabBar';
+import Orders from '../pages/orders';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomRoutes() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+        screenOptions={{headerShown:false}}
+        tabBar={pros=><CustomTabBar {...pros}/>}
+    >
         <Tab.Screen 
-            name="Pedidos" 
-            component={Pedidos}
+            name="Orders" 
+            component={Orders}
         />
         <Tab.Screen 
-            name="Entregas" 
-            component={Entregas} 
+            name="Deliveries" 
+            component={Deliveries} 
         />
         <Tab.Screen 
             name="Settings" 

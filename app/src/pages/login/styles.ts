@@ -47,7 +47,8 @@ export const styles = StyleSheet.create({
     input: {
         height: '100%',
         width: '90%',
-        marginLeft: 10
+        marginLeft: 10,
+        color:"#A9A9A9"
     },
     button: {
         width: '100%',

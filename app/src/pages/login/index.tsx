@@ -41,7 +41,7 @@ export default function Login(){
     
         if (checkUserExists(input)) {
           // Se o usuário existir, redireciona para Home
-          navigation.navigate('BottomRoutes');
+          navigation.reset({routes:[{name:"BottomRoutes"}]})
         } else {
           // Se o usuário não existir, cadastra e redireciona para Home
           Alert.alert('Cadastro', 'Usuário cadastrado com sucesso!');
@@ -80,7 +80,7 @@ export default function Login(){
                     />
                     <TextInput 
                         style={styles.input} 
-                        placeholder='*********'
+                        placeholder='***********'
                         placeholderTextColor={"#A9A9A9"}
                         value={password}
                         onChangeText={setPassword}
