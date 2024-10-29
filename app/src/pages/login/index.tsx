@@ -29,24 +29,29 @@ export default function Login(){
 
     const checkUserExists = (username: string) => {
         // Simula a existência de um usuário
-        const existingUsers = ['usuario1', 'usuario2', 'user@example.com'];
+        const existingUsers = ['usuario1', 'usuario2', 'user@gmail.com'];
         return existingUsers.includes(username);
-      };
+    };
     
-      const handleLogin = () => {
+    const handleLogin = () => {
         if (!input || !password) {
           Alert.alert('Erro', 'Preencha todos os campos.');
           return;
         }
     
         if (checkUserExists(input)) {
-          // Se o usuário existir, redireciona para Home
-          navigation.reset({routes:[{name:"BottomRoutes"}]})
+            // Se o usuário existir, redireciona para Home
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "BottomRoutes" }],
+            });
         } else {
-          // Se o usuário não existir, cadastra e redireciona para Home
-          Alert.alert('Cadastro', 'Usuário cadastrado com sucesso!');
-          // Aqui pode ser chamada uma função de cadastro
-          navigation.navigate('BottomRoutes');
+            // Se o usuário não existir, cadastra e redireciona para Home
+            Alert.alert('Cadastro', 'Usuário cadastrado com sucesso!');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "BottomRoutes" }],
+            });
         }
     };
 
@@ -80,7 +85,7 @@ export default function Login(){
                     />
                     <TextInput 
                         style={styles.input} 
-                        placeholder='***********'
+                        placeholder='Recomendável '
                         placeholderTextColor={"#A9A9A9"}
                         value={password}
                         onChangeText={setPassword}
