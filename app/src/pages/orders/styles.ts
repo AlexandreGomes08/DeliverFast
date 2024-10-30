@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginVertical: 10,
         backgroundColor: '#e95032',
         paddingVertical: 10,
       },

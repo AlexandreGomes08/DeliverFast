@@ -16,14 +16,18 @@ export default function Login(){
 
     const handleInputChange = (text: string) => {
         // Remove caracteres não numéricos
-        const onlyNumbers = text.replace(/\D/g, '');
+        const cleanedText = text.replace(/[.-]/g, '');
 
-        // Verifica se é um CPF (11 números) e aplica a máscara
-        if (onlyNumbers.length === 11) {
-        const maskedCpf = onlyNumbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        setInput(maskedCpf);
-        } else {
-        setInput(text);
+    
+        // Aplica a máscara se tiver exatamente 11 números
+        if (text.length == 11) {
+            const maskedCpf = text.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            setInput(maskedCpf);
+        } else if (text.length == 15) {
+            setInput(cleanedText);
+        }
+        else{
+            setInput(text);
         }
     };
 

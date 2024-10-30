@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { styles } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,13 +7,27 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function Settings() {
     const navigation = useNavigation<NavigationProp<any>>();
 
-    const handleLogout = () => {
-        // Redefine a navegação para retornar apenas à tela de login
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-        });
-    };
+    const showConfirmationAlert = () => {
+        Alert.alert(
+            "Deseja realmente sair?",
+            "",
+            [
+              {
+                text: "Cancelar",
+                onPress: () => console.log("Ação cancelada"),
+                style: "cancel"
+              },
+              {
+                text: "Confirmar",
+                onPress: () => { 
+                    navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                });}
+              }
+            ]
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -65,7 +79,7 @@ export default function Settings() {
                 </View>
                 <View style={styles.divider} />
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <TouchableOpacity style={styles.button} onPress={showConfirmationAlert}>
                 <MaterialIcons 
                     name='logout'
                     size={20}

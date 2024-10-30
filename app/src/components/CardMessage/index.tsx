@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { styles } from './styles';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 interface CardMessageProps {
   id: number;

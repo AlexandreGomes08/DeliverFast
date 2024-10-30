@@ -1,35 +1,163 @@
 // src/pages/OrderDetails.tsx
-import React from "react";
-import { View, Text, ScrollView } from "react-native";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { styles } from "./styles";
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { RouteProp, useRoute, useNavigation, CommonActions } from '@react-navigation/native';
+import { styles } from './styles';
+import api from '../../services/api';
+import { OrdersStackParamList } from '../../types/navigation';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
-type OrderDetailsRouteProp = RouteProp<{ params: { order: Order } }, 'params'>;
-
-interface Order {
-  id: number;
-  clientName: string;
-  products: string[];
-  address: string;
-  status: 'Pendente' | 'Em andamento' | 'Concluído';
-}
+type OrderDetailsRouteProp = RouteProp<OrdersStackParamList, 'OrderDetails'>;
 
 export default function OrderDetails() {
-  const route = useRoute<OrderDetailsRouteProp>();
-  const { order } = route.params;
+    const route = useRoute<OrderDetailsRouteProp>();
+    const { order } = route.params;
+    const [status, setStatus] = useState(order.status);
+    const navigation = useNavigation();
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Detalhes do Pedido</Text>
-      <ScrollView>
-        <Text>Cliente: {order.clientName}</Text>
-        <Text>Endereço: {order.address}</Text>
-        <Text>Status: {order.status}</Text>
-        <Text>Produtos:</Text>
-        {order.products.map((product, index) => (
-          <Text key={index}>- {product}</Text>
-        ))}
-      </ScrollView>
-    </View>
-  );
+    const showRedirectAlert = (newStatus: "Pendente" | "Em andamento" | "Concluído") => {
+        Alert.alert('Sucesso', `Pedido ${newStatus}!
+Redirecionando para a tela de Pedidos.`, [
+            {
+                text: "OK",
+                onPress: () => {
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{name: 'Orders'}]
+                        })
+                    )
+                }
+            }
+        ]);
+    }
+
+    const showConfirmationAlert = (newStatus: "Pendente" | "Em andamento" | "Concluído") => {
+        Alert.alert(
+            "Confirmação de Ação",
+            "Deseja continuar com a ação?",
+            [
+              {
+                text: "Cancelar",
+                onPress: () => console.log("Ação cancelada"),
+                style: "cancel"
+              },
+              {
+                text: "Confirmar",
+                onPress: () => {
+                    if (newStatus){
+                        api.put(`/orders/${order.id}`, { status: newStatus });
+                        setStatus(newStatus);
+                        showRedirectAlert(newStatus)}
+                    }
+              }
+            ]
+        );
+    }
+
+    const updateOrderStatus = async (newStatus: 'Em andamento' | 'Concluído') => {
+        try {
+            
+            showConfirmationAlert(newStatus);
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível atualizar o status do pedido.');
+            console.error("Erro ao atualizar o status:", error.message);
+        }
+    };
+
+    const CustomButton = ({ title, onPress }) => (
+        <TouchableOpacity style={styles.customButton} onPress={onPress}>
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+
+    // Função para definir a cor do status
+    const getStatusColor = () => {
+        switch (status) {
+        case 'Pendente':
+            return '#ffd543';
+        case 'Em andamento':
+            return '#00a5ff';
+        case 'Concluído':
+            return '#00f8a9';
+        }
+    };
+    // Função para definir o ícone do status
+    const getStatusIcon = () => {
+        switch (status) {
+        case 'Pendente':
+            return 'clock-o';
+        case 'Em andamento':
+            return 'spinner';
+        case 'Concluído':
+            return 'check-circle'; 
+        default:
+            return 'question-circle';
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.boxTop}>
+                <Text style={styles.title}>Detalhes do Pedido</Text>
+            </View>
+            <View style={styles.boxMid}>
+                <View style={styles.cardBox}>
+                    <MaterialIcons 
+                        name='person'
+                        size={25}
+                        color={'#e95032'}
+                    />
+                    <Text style={styles.cardDados}>{order.clientName}</Text>
+                </View>
+                <View style={styles.cardBox}>       
+                    <MaterialIcons 
+                        name='location-on'
+                        size={25}
+                        color={'#e95032'}
+                    />
+                    <Text style={styles.cardDados}>{order.address}</Text>
+                </View>
+                <View style={styles.cardBox}>
+                    <MaterialIcons 
+                        name='food-bank'
+                        size={25}
+                        color={'#e95032'}
+                    />
+                    <Text style={styles.cardDados}>{order.products.join(', ')}</Text>
+                </View>
+                <View style={styles.cardStatus}>
+                    <FontAwesome 
+                        name={getStatusIcon()} 
+                        size={20} 
+                        color={getStatusColor()} 
+                    />
+                    <Text style={[styles.textStatus, { color: getStatusColor() }]}>{status}</Text>
+                </View>
+
+
+                <View style={styles.boxButton}>
+                {status === 'Pendente' && (
+                    <CustomButton 
+                        title="Saído para a entrega"
+                        onPress={() => updateOrderStatus('Em andamento')}
+                    />
+                )}
+
+                {status === 'Em andamento' && (
+                    <CustomButton
+                        title="Pedido entregue"
+                        onPress={() => updateOrderStatus('Concluído')}
+                    />
+                )}
+
+                {status === 'Concluído' && (
+                    <View style={styles.buttonView}>
+                        <Text style={styles.completedText}>Pedido concluído</Text>
+                    </View>
+                )}
+                </View>
+            </View>
+        </View>
+    );
 }
