@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     divider: {
         height: 1, 
         width: '100%',
-        backgroundColor: '#ccc', 
+        backgroundColor: '#6B6B6B', 
         alignSelf: 'center', 
         marginVertical: 20, 
     },

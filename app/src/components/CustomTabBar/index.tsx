@@ -3,9 +3,10 @@ import { Text, View } from 'react-native';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 
-export default({state,navigation})=>{
+export default({state,navigation}: BottomTabBarProps)=>{
 
     const go = (screenName:string)=>{
         navigation.navigate(screenName)
@@ -19,15 +20,9 @@ export default({state,navigation})=>{
                     size={30}
                     style={{opacity:state.index === 0?1:0.5,color:'#e95032'}}
                 />
-                <Text style={styles.textItem} style={{opacity:state.index === 0?1:0.5,color:'#e95032'}}>Pedidos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.tabItem} onPress={()=>go("Deliveries")}>
-                <MaterialIcons 
-                    name='moped'
-                    size={30}
-                    style={{opacity:state.index === 1?1:0.5,color:'#e95032'}}
-                />
-                <Text style={styles.textItem} style={{opacity:state.index === 1?1:0.5,color:'#e95032'}}>Entregas</Text>
+                <Text style={[styles.textItem, { opacity: state.index === 0 ? 1 : 0.5, color: '#e95032' }]}>
+                    Pedidos
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.tabItem} onPress={()=>go("Settings")}>
                 <MaterialIcons 
@@ -35,7 +30,9 @@ export default({state,navigation})=>{
                     size={30}
                     style={{opacity:state.index === 2?1:0.5,color:'#e95032'}}
                 />
-                <Text style={styles.textItem} style={{opacity:state.index === 2?1:0.5,color:'#e95032'}}>Settings</Text>
+                <Text style={[styles.textItem, { opacity: state.index === 1 ? 1 : 0.5, color: '#e95032' }]}>
+                    Settings
+                </Text>
             </TouchableOpacity>
 
         </View>

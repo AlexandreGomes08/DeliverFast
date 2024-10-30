@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from './styles';
 import api from '../../services/api';
 import CardMessage from "../../components/CardMessage";
+import { useNavigation } from "@react-navigation/native";
+import { OrdersNavigationProp } from "../../types/navigation";
 
 interface Order {
     id: number;
@@ -43,37 +45,43 @@ export default function Orders() {
         setSelectedStatus(status);
     };
 
+    const navigation = useNavigation<OrdersNavigationProp>();
+
     return (
         <View style={styles.container}>
-        <View style={styles.boxTop}>
-            <Text style={styles.title}>Pedidos</Text>
-            
-            {/*filtro*/}
-            <View style={styles.menu}>
-            {['ALL', 'Pendente', 'Em andamento', 'Concluído'].map(status => (
-                <TouchableOpacity key={status} onPress={() => handleStatusChange(status as 'ALL' | 'Pendente' | 'Em andamento' | 'Concluído')}>
-                <Text style={[styles.menuItem, selectedStatus === status && styles.selectedMenuItem]}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                </Text>
-                </TouchableOpacity>
-            ))}
+            <View style={styles.boxTop}>
+                <Text style={styles.title}>Pedidos</Text>
+                
+                {/*filtro*/}
+                <View style={styles.menu}>
+                {['ALL', 'Pendente', 'Em andamento', 'Concluído'].map(status => (
+                    <TouchableOpacity key={status} onPress={() => handleStatusChange(status as 'ALL' | 'Pendente' | 'Em andamento' | 'Concluído')}>
+                    <Text style={[styles.menuItem, selectedStatus === status && styles.selectedMenuItem]}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </Text>
+                    </TouchableOpacity>
+                ))}
+                </View>
             </View>
-        </View>
 
-        <View style={styles.boxMid}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-            {filteredOrders.map(order => (
-                <CardMessage
-                key={order.id}
-                id={order.id}
-                clientName={order.clientName}
-                address={order.address}
-                status={order.status}
-                products={order.products}
-                />
-            ))}
-            </ScrollView>
-        </View>
+            <View style={styles.boxMid}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {filteredOrders.map(order => (
+                        <TouchableOpacity 
+                            key={order.id} 
+                            onPress={() => navigation.navigate("OrderDetails", { order })}
+                        >
+                            <CardMessage
+                                id={order.id}
+                                clientName={order.clientName}
+                                address={order.address}
+                                status={order.status}
+                                products={order.products}
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
         </View>
     );
 }

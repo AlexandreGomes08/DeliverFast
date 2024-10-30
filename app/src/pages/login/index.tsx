@@ -85,7 +85,7 @@ export default function Login(){
                     />
                     <TextInput 
                         style={styles.input} 
-                        placeholder='Recomendável '
+                        placeholder='**********'
                         placeholderTextColor={"#A9A9A9"}
                         value={password}
                         onChangeText={setPassword}
