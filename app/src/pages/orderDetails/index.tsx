@@ -1,4 +1,3 @@
-// src/pages/OrderDetails.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, Linking } from 'react-native';
 import { RouteProp, useRoute, useNavigation, CommonActions } from '@react-navigation/native';
@@ -110,7 +109,6 @@ Redirecionando para a tela de Pedidos.`, [
         </TouchableOpacity>
     );
 
-    // Função para definir a cor do status
     const getStatusColor = () => {
         switch (status) {
         case 'Pendente':
@@ -121,7 +119,7 @@ Redirecionando para a tela de Pedidos.`, [
             return '#00f8a9';
         }
     };
-    // Função para definir o ícone do status
+    
     const getStatusIcon = () => {
         switch (status) {
         case 'Pendente':

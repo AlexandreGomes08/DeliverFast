@@ -15,11 +15,9 @@ export default function Login(){
     const [password, setPassword] = useState('');
 
     const handleInputChange = (text: string) => {
-        // Remove caracteres não numéricos
         const cleanedText = text.replace(/[.-]/g, '');
 
     
-        // Aplica a máscara se tiver exatamente 11 números
         if (text.length == 11) {
             const maskedCpf = text.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             setInput(maskedCpf);
@@ -32,7 +30,6 @@ export default function Login(){
     };
 
     const checkUserExists = (username: string) => {
-        // Simula a existência de um usuário
         const existingUsers = ['usuario1', 'usuario2', 'user@gmail.com'];
         return existingUsers.includes(username);
     };
@@ -44,13 +41,11 @@ export default function Login(){
         }
     
         if (checkUserExists(input)) {
-            // Se o usuário existir, redireciona para Home
             navigation.reset({
                 index: 0,
                 routes: [{ name: "BottomRoutes" }],
             });
         } else {
-            // Se o usuário não existir, cadastra e redireciona para Home
             Alert.alert('Cadastro', 'Usuário cadastrado com sucesso!');
             navigation.reset({
                 index: 0,

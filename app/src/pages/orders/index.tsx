@@ -20,11 +20,10 @@ export default function Orders() {
     const [selectedStatus, setSelectedStatus] = useState<'ALL' | 'Pendente' | 'Em andamento' | 'Concluído'>('ALL');
 
     useEffect(() => {
-        // Busca os pedidos da API
         api.get<Order[]>('orders')
         .then(({ data }) => {
             setOrders(data);
-            setFilteredOrders(data); // Inicialmente exibe todos os pedidos
+            setFilteredOrders(data); 
         })
         .catch((error) => {
             console.error("Erro ao buscar pedidos:", error.message);
@@ -32,7 +31,6 @@ export default function Orders() {
     }, []);
 
     useEffect(() => {
-        // Filtra os pedidos com base no status selecionado
         if (selectedStatus === 'ALL') {
         setFilteredOrders(orders);
         } else {

@@ -19,7 +19,6 @@ export default function CardMessage({
   products,
 }: CardMessageProps) {
 
-  // Função para definir a cor do status
   const getStatusColor = () => {
     switch (status) {
       case 'Pendente':
@@ -30,7 +29,7 @@ export default function CardMessage({
         return '#00f8a9';
     }
   };
-  // Função para definir o ícone do status
+  
   const getStatusIcon = () => {
     switch (status) {
       case 'Pendente':
