@@ -1,6 +1,6 @@
 // src/pages/OrderDetails.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Linking } from 'react-native';
 import { RouteProp, useRoute, useNavigation, CommonActions } from '@react-navigation/native';
 import { styles } from './styles';
 import api from '../../services/api';
@@ -47,6 +47,12 @@ export default function OrderDetails() {
         requestLocationPermissionAndGetCoordinates();
     }, [order.address]);
     
+    const openGoogleMaps = () => {
+        if (location) {
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}`;
+            Linking.openURL(url);
+        }
+    };
 
     const showRedirectAlert = (newStatus: "Pendente" | "Em andamento" | "Concluído") => {
         Alert.alert('Sucesso', `Pedido ${newStatus}!
@@ -67,8 +73,8 @@ Redirecionando para a tela de Pedidos.`, [
 
     const showConfirmationAlert = (newStatus: "Pendente" | "Em andamento" | "Concluído") => {
         Alert.alert(
-            "Confirmação de Ação",
-            "Deseja continuar com a ação?",
+            "Confirmação de Status",
+            "Deseja atualizar?",
             [
               {
                 text: "Cancelar",
@@ -94,11 +100,11 @@ Redirecionando para a tela de Pedidos.`, [
             showConfirmationAlert(newStatus);
         } catch (error) {
             Alert.alert('Erro', 'Não foi possível atualizar o status do pedido.');
-            console.error("Erro ao atualizar o status:", error.message);
+            console.error("Erro ao atualizar o status:", (error as Error).message);
         }
     };
 
-    const CustomButton = ({ title, onPress }) => (
+    const CustomButton: React.FC<{ title: string; onPress: () => void }> = ({ title, onPress }) => (
         <TouchableOpacity style={styles.customButton} onPress={onPress}>
             <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
@@ -172,7 +178,7 @@ Redirecionando para a tela de Pedidos.`, [
                 <View style={styles.boxButton}>
                 {status === 'Pendente' && (
                     <CustomButton 
-                        title="Saído para a entrega"
+                        title="Saiu para a entrega"
                         onPress={() => updateOrderStatus('Em andamento')}
                     />
                 )}
@@ -215,6 +221,14 @@ Redirecionando para a tela de Pedidos.`, [
                     <Text style={{ textAlign: 'center', marginTop: 10 }}>Carregando mapa...</Text>
                 )}
             </View>
+            <TouchableOpacity style={styles.openMapsButton} onPress={openGoogleMaps}>
+                <Text style={styles.buttonText}>Abrir no Google Maps</Text>
+                <MaterialIcons 
+                        name='map'
+                        size={25}
+                        color={'white'}
+                />
+            </TouchableOpacity>
         </View>
     );
 }
