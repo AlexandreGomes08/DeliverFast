@@ -31,9 +31,9 @@ export const styles = StyleSheet.create({
     },
     cardDados: {
         color: '#A9A9A9',
-        fontSize: 19,
+        fontSize: 17,
         marginLeft: 3,
-        marginTop: 1.5,
+        marginTop: 2,
         marginBottom: 10
     },
     customButton: {
@@ -81,5 +81,16 @@ export const styles = StyleSheet.create({
         color: '#FFFFFF', 
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    boxMap: {
+        borderRadius: 15,
+        overflow: 'hidden',
+        marginTop: 10,
+        height: 300,
+        width: '80%',
+    },
+    map: {
+        width: '100%', 
+        height: 300, 
     }
 })

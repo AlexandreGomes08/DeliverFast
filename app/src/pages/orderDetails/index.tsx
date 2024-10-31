@@ -1,11 +1,14 @@
 // src/pages/OrderDetails.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { RouteProp, useRoute, useNavigation, CommonActions } from '@react-navigation/native';
 import { styles } from './styles';
 import api from '../../services/api';
 import { OrdersStackParamList } from '../../types/navigation';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+
 
 type OrderDetailsRouteProp = RouteProp<OrdersStackParamList, 'OrderDetails'>;
 
@@ -13,7 +16,37 @@ export default function OrderDetails() {
     const route = useRoute<OrderDetailsRouteProp>();
     const { order } = route.params;
     const [status, setStatus] = useState(order.status);
+    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        const requestLocationPermissionAndGetCoordinates = async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            
+            if (status !== 'granted') {
+                Alert.alert("Permissão negada", "O aplicativo precisa de permissão para acessar a localização.");
+                return;
+            }
+    
+            try {
+                const [geocode] = await Location.geocodeAsync(order.address);
+                if (geocode) {
+                    setLocation({
+                        latitude: geocode.latitude,
+                        longitude: geocode.longitude,
+                    });
+                    console.log("Coordenadas obtidas:", geocode);
+                } else {
+                    console.log("Nenhuma coordenada encontrada para o endereço.");
+                }
+            } catch (error) {
+                console.error("Erro ao buscar coordenadas:", error);
+            }
+        };
+    
+        requestLocationPermissionAndGetCoordinates();
+    }, [order.address]);
+    
 
     const showRedirectAlert = (newStatus: "Pendente" | "Em andamento" | "Concluído") => {
         Alert.alert('Sucesso', `Pedido ${newStatus}!
@@ -157,6 +190,30 @@ Redirecionando para a tela de Pedidos.`, [
                     </View>
                 )}
                 </View>
+            </View>
+            <View style={styles.boxMap}>
+                {location ? (
+                    <MapView
+                        style={styles.map}
+                        initialRegion={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        }}
+                    >
+                        <Marker
+                            coordinate={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                            }}
+                            title="Endereço do pedido"
+                            description={order.address}
+                        />
+                    </MapView>
+                ) : (
+                    <Text style={{ textAlign: 'center', marginTop: 10 }}>Carregando mapa...</Text>
+                )}
             </View>
         </View>
     );
